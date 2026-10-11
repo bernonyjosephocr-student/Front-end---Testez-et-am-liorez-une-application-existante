@@ -1,0 +1,40 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 16px;
+}
+
+mat-card-header {
+  margin-bottom: 24px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  margin-bottom: 12px;
+}
+
+.error-message {
+  color: #b00020;
+  margin-bottom: 16px;
+}
+
+button mat-spinner {
+  margin: 0 auto;
+}
+
+mat-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
