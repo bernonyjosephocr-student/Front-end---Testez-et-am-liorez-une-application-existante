@@ -47,14 +47,37 @@ export class LoginComponent {
         //this.router.navigate(['/somepath']);
       },
       error: (error: HttpErrorResponse) => {
-        // Handle login error
         this.loading = false;
-        console.error('Login failed:', error);
-        this.errorMessage = 
-          error.status === 401 || error.status === 403 
-            ? 'Invalid login credentials. Please try again.' 
-            : 'An error occurred. Please try again.';
+        this.loginSuccess = false;    
+
+        // 1. In case of JSON object
+        if (error.error && typeof error.error === 'object') {
+          this.errorMessage =
+            error.error.message ??
+            error.error.error ??
+            `Request failed (${error.status}).`;
+        } 
+        // 2. In case String JSON or plain text
+        else if (typeof error.error === 'string' && error.error.trim()) {
+          try {
+            const parsedError = JSON.parse(error.error);
+            this.errorMessage = parsedError.message ?? parsedError.error ?? error.error;
+          } catch (e) {
+            // We keep the original error string if it's not valid JSON
+            this.errorMessage = error.error;
+          }
+        } 
+        // 3. In case there is no response body or network error
+        else {
+          this.errorMessage =
+            error.status === 0
+              ? 'Unable to connect to the server.'
+              : `Request failed with HTTP ${error.status}.`;
+        }
+
+        console.error('Login error:', this.errorMessage);
       }
+
     });
   }
 

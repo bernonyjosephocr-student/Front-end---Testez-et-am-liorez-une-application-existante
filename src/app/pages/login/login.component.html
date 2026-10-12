@@ -50,13 +50,10 @@
         </mat-form-field>
 
         <!-- Error message -->
-        <p
-          *ngIf="errorMessage"
-          class="error-message"
-          role="alert"
-        >
-          {{ errorMessage }}
-        </p>
+        <div *ngIf="errorMessage" class="error-message" role="alert">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage }}</span>
+        </div>
 
         <!-- Submit -->
         <button
