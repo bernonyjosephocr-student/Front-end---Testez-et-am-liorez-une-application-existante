@@ -1,0 +1,220 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      {{ studentId !== undefined ? 'Edit Student' : 'Create Student' }}
+    </mat-card-title>
+
+    <mat-card-subtitle>
+      {{
+        studentId !== undefined
+          ? 'Update student information'
+          : 'Enter the new student information'
+      }}
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (loading) {
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="40">
+      </mat-progress-spinner>
+    }
+
+    @if (errorMessage) {
+      <p class="error">{{ errorMessage }}</p>
+    }
+
+    @if (!loading) {
+      <form [formGroup]="form" (ngSubmit)="save()">
+
+        <div class="form-grid">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Card Number</mat-label>
+            <input matInput formControlName="cardNumber">
+
+            @if (form.controls.cardNumber.hasError('required')
+              && form.controls.cardNumber.touched) {
+              <mat-error>Card number is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName">
+
+            @if (form.controls.firstName.hasError('required')
+              && form.controls.firstName.touched) {
+              <mat-error>First name is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName">
+
+            @if (form.controls.lastName.hasError('required')
+              && form.controls.lastName.touched) {
+              <mat-error>Last name is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Date of Birth</mat-label>
+            <input
+              matInput
+              type="date"
+              formControlName="dateOfBirth">
+
+            @if (form.controls.dateOfBirth.hasError('required')
+              && form.controls.dateOfBirth.touched) {
+              <mat-error>Date of birth is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              formControlName="email">
+
+            @if (form.controls.email.hasError('required')
+              && form.controls.email.touched) {
+              <mat-error>Email is required.</mat-error>
+            }
+
+            @if (form.controls.email.hasError('email')
+              && form.controls.email.touched) {
+              <mat-error>Enter a valid email address.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Phone number</mat-label>
+
+            <input
+              matInput
+              type="tel"
+              formControlName="phoneNumber"
+              placeholder="+33 6 12 34 56 78"
+              autocomplete="tel"
+            />
+
+            @if (form.controls.phoneNumber.hasError('required')
+              && form.controls.phoneNumber.touched) {
+              <mat-error>Phone number is required.</mat-error>
+            }
+
+            @if (form.controls.phoneNumber.hasError('pattern')
+              && form.controls.phoneNumber.touched) {
+              <mat-error>Enter a valid phone number.</mat-error>
+            }
+          </mat-form-field>          
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Home Address</mat-label>
+            <textarea
+              matInput
+              rows="2"
+              formControlName="homeAddress">
+            </textarea>
+
+            @if (form.controls.homeAddress.hasError('required')
+              && form.controls.homeAddress.touched) {
+              <mat-error>Home address is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Membership Type</mat-label>
+            
+            <mat-select formControlName="membershipType">
+              <mat-option value="Standard">Standard</mat-option>
+              <mat-option value="Premium">Premium</mat-option>
+              <mat-option value="VIP">VIP</mat-option>
+            </mat-select>            
+
+            @if (form.controls.membershipType.hasError('required')
+              && form.controls.membershipType.touched) {
+              <mat-error>Membership type is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Student Card Number</mat-label>
+            <input matInput formControlName="studentCardNumber">
+
+            @if (form.controls.studentCardNumber.hasError('required')
+              && form.controls.studentCardNumber.touched) {
+              <mat-error>Student card number is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Student Card Expiry Date</mat-label>
+            <input
+              matInput
+              type="date"
+              formControlName="studentCardExpiryDate">
+
+            @if (form.controls.studentCardExpiryDate.hasError('required')
+              && form.controls.studentCardExpiryDate.touched) {
+              <mat-error>Student card expiry date is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Membership Expiry Date</mat-label>
+            <input
+              matInput
+              type="date"
+              formControlName="membershipExpiryDate">
+
+            @if (form.controls.membershipExpiryDate.hasError('required')
+              && form.controls.membershipExpiryDate.touched) {
+              <mat-error>Membership expiry date is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Account Status</mat-label>
+
+            <mat-select formControlName="accountStatus">
+              <mat-option value="ACTIVE">Active</mat-option>
+              <mat-option value="INACTIVE">Inactive</mat-option>
+              <mat-option value="SUSPENDED">Suspended</mat-option>
+            </mat-select>
+
+            @if (form.controls.accountStatus.hasError('required')
+              && form.controls.accountStatus.touched) {
+              <mat-error>Account status is required.</mat-error>
+            }
+          </mat-form-field>
+
+        </div>
+
+        <div class="form-actions">
+          <a mat-button routerLink="/students">
+            Cancel
+          </a>
+
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="saving">
+
+            @if (saving) {
+              Saving...
+            } @else {
+              {{ studentId !== undefined ? 'Update Student' : 'Create Student' }}
+            }
+          </button>
+        </div>
+
+      </form>
+    }
+  </mat-card-content>
+</mat-card>

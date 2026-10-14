@@ -1,0 +1,112 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Student Management</mat-card-title>
+    <mat-card-subtitle>
+      Manage student records and memberships
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (loading) {
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="40">
+      </mat-progress-spinner>
+    }
+
+    @if (errorMessage) {
+      <p class="error">{{ errorMessage }}</p>
+    }
+
+    @if (!loading && !errorMessage) {
+      <div class="actions">
+        <a mat-flat-button color="primary" routerLink="/students/new">
+          <mat-icon>person_add</mat-icon>
+          Add student
+        </a>
+      </div>
+
+      @if (students.length === 0) {
+        <p>No students found.</p>
+      } @else {
+        <div class="table-container">
+          <table mat-table [dataSource]="students">
+
+            <ng-container matColumnDef="cardNumber">
+              <th mat-header-cell *matHeaderCellDef>Card Number</th>
+              <td mat-cell *matCellDef="let student">
+                {{ student.cardNumber }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="firstName">
+              <th mat-header-cell *matHeaderCellDef>First Name</th>
+              <td mat-cell *matCellDef="let student">
+                {{ student.firstName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="lastName">
+              <th mat-header-cell *matHeaderCellDef>Last Name</th>
+              <td mat-cell *matCellDef="let student">
+                {{ student.lastName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <td mat-cell *matCellDef="let student">
+                {{ student.email }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="membershipType">
+              <th mat-header-cell *matHeaderCellDef>Membership</th>
+              <td mat-cell *matCellDef="let student">
+                {{ student.membershipType }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="accountStatus">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let student">
+                {{ student.accountStatus }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let student">
+                <a
+                  mat-icon-button
+                  [routerLink]="['/students', student.id]"
+                  aria-label="View student">
+                  <mat-icon>visibility</mat-icon>
+                </a>
+
+                <a
+                  mat-icon-button
+                  [routerLink]="['/students', student.id, 'edit']"
+                  aria-label="Edit student">
+                  <mat-icon>edit</mat-icon>
+                </a>
+
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="deleteStudent(student)"
+                  aria-label="Delete student">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          </table>
+        </div>
+      }
+    }
+  </mat-card-content>
+</mat-card>

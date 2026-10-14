@@ -1,0 +1,34 @@
+h2 {
+  margin-bottom: 20px;
+}
+
+mat-card {
+  margin: 24px;
+}
+
+mat-card-content {
+  padding-top: 20px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.error {
+  color: #b00020;
+}
+
+mat-progress-spinner {
+  margin: 24px auto;
+}

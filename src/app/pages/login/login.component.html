@@ -36,12 +36,22 @@
 
           <input
             matInput
-            type="password"
+            [type]="hidePassword ? 'password' : 'text'"
             formControlName="password"
             autocomplete="current-password"
             required
           />
-
+            <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                (click)="hidePassword = !hidePassword"
+                [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hidePassword"
+          >
+            <mat-icon>{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+          
           <mat-error
             *ngIf="loginForm.controls.password.hasError('required')"
           >

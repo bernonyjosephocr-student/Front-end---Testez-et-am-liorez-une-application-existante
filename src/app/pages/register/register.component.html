@@ -55,20 +55,33 @@
 
       <div class="form-group">
         <label>Password</label>
-        <input
-          type="text"
-          formControlName="password"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && form['password'].errors }"
-        />
-        @if (submitted && form['password'].errors) {
-          <div class="invalid-feedback">
-            @if (form['password'].errors?.['required']) {
-              <div>password is required</div>
-            }
-          </div>
-        }
+        <div class="input-group">    
+          <input
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && form['password'].errors }"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+          </button>
+
+          @if (submitted && form['password'].errors) {
+            <div class="invalid-feedback">
+              @if (form['password'].errors?.['required']) {
+                <div>password is required</div>
+              }
+            </div>
+          }
+        </div>  
       </div>
+
       <div class="text-center">
         <button class="btn btn-primary mr-1">Register</button>
         <button class="btn btn-secondary" type="reset" (click)="onReset()">

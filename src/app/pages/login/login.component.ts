@@ -21,9 +21,10 @@ export class LoginComponent {
   private readonly loginService = inject(LoginService);
   private readonly router = inject(Router);
 
-  loading = false;
-  loginSuccess = false;
-  errorMessage= '';
+  loading: boolean = false;
+  loginSuccess: boolean = false;
+  errorMessage: string = '';
+  hidePassword: boolean = true;
 
   loginForm = this.formBuilder.nonNullable.group({
     login: ['', Validators.required],
@@ -44,7 +45,7 @@ export class LoginComponent {
         this.loginSuccess = true;
         console.log('Login successful');
         // Navigate to dashboard or desired route
-        //this.router.navigate(['/somepath']);
+        this.router.navigate(['/students']);
       },
       error: (error: HttpErrorResponse) => {
         this.loading = false;

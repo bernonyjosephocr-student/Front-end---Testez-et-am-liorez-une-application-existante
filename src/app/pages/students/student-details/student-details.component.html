@@ -1,0 +1,113 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Student Details</mat-card-title>
+    <mat-card-subtitle>
+      View student information and membership details
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (loading) {
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="40">
+      </mat-progress-spinner>
+    }
+
+    @if (errorMessage) {
+      <p class="error">{{ errorMessage }}</p>
+    }
+
+    @if (student) {
+      <div class="details-grid">
+<!-- 
+        <div class="detail">
+          <span class="label">Student ID</span>
+          <span>{{ student.id }}</span>
+        </div> -->
+
+        <div class="detail">
+          <span class="label">Card Number</span>
+          <span>{{ student.cardNumber }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="label">First Name</span>
+          <span>{{ student.firstName }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="label">Last Name</span>
+          <span>{{ student.lastName }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="label">Date of Birth</span>
+          <span>{{ student.dateOfBirth }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="label">Email</span>
+          <span>{{ student.email }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="label">Phone Number</span>
+          <span>{{ student.phoneNumber }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="label">Home Address</span>
+          <span>{{ student.homeAddress }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="label">Membership Type</span>
+          <span>{{ student.membershipType }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="label">Student Card Number</span>
+          <span>{{ student.studentCardNumber }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="label">Student Card Expiry</span>
+          <span>{{ student.studentCardExpiryDate }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="label">Membership Expiry</span>
+          <span>{{ student.membershipExpiryDate }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="label">Account Status</span>
+          <span>{{ student.accountStatus }}</span>
+        </div>
+
+        <div class="detail">
+          <span class="label">Created At</span>
+          <span>{{ student.createdAt || 'N/A' }}</span>
+        </div>
+
+      </div>
+    }
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <a mat-button routerLink="/students">
+      Back to list
+    </a>
+
+    @if (student) {
+      <a
+        mat-flat-button
+        color="primary"
+        [routerLink]="['/students', student.id, 'edit']">
+        <mat-icon>edit</mat-icon>
+        Edit Student
+      </a>
+    }
+  </mat-card-actions>
+</mat-card>

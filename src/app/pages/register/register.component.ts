@@ -21,6 +21,7 @@ export class RegisterComponent implements OnInit {
   private router = inject(Router);
   registerForm: FormGroup = new FormGroup({});
   submitted: boolean = false;
+  hidePassword: boolean = true;
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group(
