@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import {RegisterComponent} from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
-import { StudentListComponent } from './pages/students/students-list/students-list.component';
+import { StudentsListComponent } from './pages/students/students-list/students-list.component';
 import { StudentFormComponent } from './pages/students/student-form/student-form.component';
 import { StudentDetailsComponent } from './pages/students/student-details/student-details.component';
 import { authGuard } from './core/guards/auth.guard';
@@ -22,7 +22,7 @@ export const routes: Routes = [
   },
   {
     path: 'students',
-    component: StudentListComponent,
+    component: StudentsListComponent,
     canActivate: [authGuard]
   },
   { path: 'students/new',

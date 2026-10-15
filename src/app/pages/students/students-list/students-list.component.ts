@@ -17,7 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrl: './students-list.component.css'
 })
 
-export class StudentListComponent implements OnInit {
+export class StudentsListComponent implements OnInit {
 
   private readonly studentService = inject(StudentService);
   private readonly snackBar = inject(MatSnackBar);
@@ -56,6 +56,7 @@ export class StudentListComponent implements OnInit {
       }
     });
   }
+
   deleteStudent(student: Student): void {
     if (student.id === undefined) {
       return;
