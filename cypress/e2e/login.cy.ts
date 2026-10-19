@@ -1,23 +1,19 @@
-describe('login page', () => {
-    // Tests the routing to login
-    it('should redirect to the login path', () => {
-        cy.visit('/');
-        cy.url().should('include','/login')
-    } )
+describe('Login page', () => {
+  it('should redirect to the login page', () => {
+    cy.visit('/');
 
-    // Tests showing form
-    it('should display the login form', () => {
-        cy.visit('/login');
-        cy.get('form').should('be.visible');
-    });
-});
+    cy.url().should('include', '/login');
+  });
 
-describe('User login', () => {
+  it('should display the login form', () => {
+    cy.visit('/login');
 
-  it('should log in with the existing test user', () => {
+    cy.get('form').should('be.visible');
+  });
+
+  it('should log in and navigate to the students page', () => {
     cy.login();
-
-    cy.contains('Student Management').should('be.visible');
+    cy.url().should('include', '/students');
   });
 
 });

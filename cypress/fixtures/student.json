@@ -1,0 +1,15 @@
+{
+  "id": 1,
+  "cardNumber": "CARD-001",
+  "firstName": "Jean",
+  "lastName": "Dupont",
+  "dateOfBirth": "2000-05-15",
+  "email": "jean.dupont@example.com",
+  "phoneNumber": "+33612345678",
+  "homeAddress": "10 Rue de Rennes, 35000 Rennes",
+  "membershipType": "Premium",
+  "studentCardNumber": "STUDENT-001",
+  "studentCardExpiryDate": "2027-12-31",
+  "membershipExpiryDate": "2027-12-31",
+  "accountStatus": "ACTIVE"
+}

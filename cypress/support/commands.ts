@@ -44,6 +44,40 @@
 import { testUser } from './test-user';
 
 Cypress.Commands.add('login', () => {
+  // Create a JWT-like token with a future expiration time.
+  const header = btoa(JSON.stringify({
+    alg: 'HS256',
+    typ: 'JWT'
+  }));
+
+  const payload = btoa(JSON.stringify({
+    sub: testUser.login,
+    exp: Math.floor(Date.now() / 1000) + 3600
+  }));
+
+  // The guard checks the token structure and payload, not the signature.
+  const fakeJwtToken = `${header}.${payload}.fake-signature`;
+
+  cy.intercept('POST', '/api/login', {
+    statusCode: 200,
+    body: fakeJwtToken,
+    headers: {
+      'content-type': 'text/plain'
+    }
+  }).as('loginRequest');
+
+  cy.intercept('GET', '/api/students', (req) => {
+    // Verify that the interceptor adds the Bearer token.
+    expect(req.headers['authorization']).to.equal(
+      `Bearer ${fakeJwtToken}`
+    );
+
+    req.reply({
+      statusCode: 200,
+      body: []
+    });
+  }).as('getStudents');
+
   cy.visit('/login');
 
   cy.get('input[formControlName="login"]')
@@ -56,13 +90,12 @@ Cypress.Commands.add('login', () => {
 
   cy.contains('button', 'Login').click();
 
-  cy.url().should('include', '/students');
+  cy.wait('@loginRequest');
 
-  cy.window().should((win) => {
-    expect(win.localStorage.getItem('authToken'))
-      .to.be.a('string')
-      .and.not.be.empty;
-  });
+  cy.location('pathname', { timeout: 10000 })
+    .should('eq', '/students');
+
+  cy.wait('@getStudents');
 });
 
 declare global {

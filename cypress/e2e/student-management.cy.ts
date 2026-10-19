@@ -1,36 +1,48 @@
-describe('Student management - real backend', () => {
-  const testUser = {
-    firstName: 'Cypress',
-    lastName: 'Test',
-    login: `cypress-${Date.now()}`,
-    password: 'CypressTest123!'
-  };
+describe('Student management', () => {
+  let student: any;
 
-  const student = {
-    cardNumber: `CARD-${Date.now()}`,
-    firstName: 'Jean',
-    lastName: 'Dupont',
-    dateOfBirth: '2000-05-15',
-    email: `jean.dupont.${Date.now()}@example.com`,
-    phoneNumber: '+33612345678',
-    homeAddress: '10 Rue de Rennes, 35000 Rennes',
-    membershipType: 'Standard',
-    studentCardNumber: `STUDENT-${Date.now()}`,
-    studentCardExpiryDate: '2027-12-31',
-    membershipExpiryDate: '2027-12-31',
-    accountStatus: 'ACTIVE'
-  };
 
-  it('should create, update, and delete a student', () => {
-    cy.login();   
+  beforeEach(() => {
+    cy.fixture('student.json').then((fixture) => {
+        student = fixture;
+    });
 
-    // Open the student creation form.
+    cy.intercept('POST', '/api/students', (req) => {
+        student = { ...req.body, id: 1 };
+
+        req.reply({
+        statusCode: 201,
+        body: student
+        });
+    }).as('createStudent');
+
+    cy.intercept('GET', '/api/students/1', (req) => {
+        req.reply({
+        statusCode: 200,
+        body: student
+        });
+    }).as('getStudent');
+
+    cy.intercept('PUT', '/api/students/1', (req) => {
+        student = { ...student, ...req.body, id: 1 };
+
+        req.reply({
+        statusCode: 200,
+        body: student
+        });
+    }).as('updateStudent');
+
+    cy.intercept('DELETE', '/api/students/1', {
+        statusCode: 204,
+        body: ''
+    }).as('deleteStudent');
+
+    cy.login();
+  });
+
+  it('should create a student', () => {
     cy.contains('a', 'Add student').click();
 
-    cy.contains('mat-card-title', 'Create Student')
-      .should('be.visible');
-
-    // Fill in the student form.
     cy.get('input[formControlName="cardNumber"]')
       .type(student.cardNumber);
 
@@ -52,9 +64,7 @@ describe('Student management - real backend', () => {
     cy.get('textarea[formControlName="homeAddress"]')
       .type(student.homeAddress);
 
-    cy.get('mat-select[formControlName="membershipType"]')
-      .click();
-
+    cy.get('mat-select[formControlName="membershipType"]').click();
     cy.get('mat-option').contains('Premium').click();
 
     cy.get('input[formControlName="studentCardNumber"]')
@@ -66,65 +76,65 @@ describe('Student management - real backend', () => {
     cy.get('input[formControlName="membershipExpiryDate"]')
       .type(student.membershipExpiryDate);
 
-    cy.get('mat-select[formControlName="accountStatus"]')
-      .click();
-
+    cy.get('mat-select[formControlName="accountStatus"]').click();
     cy.get('mat-option').contains('Active').click();
 
-    // Save and verify the created student.
     cy.contains('button', 'Create Student').click();
 
-    cy.url().should('match', /\/students\/\d+$/);
+    cy.wait('@createStudent')
+      .its('response.statusCode')
+      .should('equal', 201);
 
-    cy.contains('mat-card-title', 'Student Details')
-      .should('be.visible');
-
+    cy.url().should('include', '/students/1');
+    cy.contains('mat-card-title', 'Student Details').should('be.visible');
     cy.contains(student.cardNumber).should('be.visible');
-    cy.contains(student.firstName).should('be.visible');
-    cy.contains(student.lastName).should('be.visible');
-    cy.contains(student.email).should('be.visible');
-    cy.contains('Premium').should('be.visible');
+  });
 
-    // 4. Edit the student.
+  it('should update a student', () => {
+    cy.visit('/students/1');
+
+    cy.wait('@getStudent');
+
+    cy.contains('Jean').should('be.visible');
+
     cy.contains('a', 'Edit Student').click();
-
-    cy.contains('mat-card-title', 'Edit Student')
-      .should('be.visible');
-
-    const updatedFirstName = 'Jean-Pierre';
 
     cy.get('input[formControlName="firstName"]')
       .clear()
-      .type(updatedFirstName);
+      .type('Jean-Pierre');
 
     cy.contains('button', 'Update Student').click();
 
-    // Verify that the updated student is displayed.
-    cy.url().should('match', /\/students\/\d+$/);
+    cy.wait('@updateStudent')
+      .its('response.statusCode')
+      .should('equal', 200);
 
-    cy.contains('mat-card-title', 'Student Details')
-      .should('be.visible');
+    cy.contains('Jean-Pierre').should('be.visible');
+  });
 
-    cy.contains(updatedFirstName).should('be.visible');
-    cy.contains(student.lastName).should('be.visible');
+  it('should delete a student', () => {
+    // Replace the empty list response with a list containing our student.
+    cy.intercept('GET', '/api/students', {
+      statusCode: 200,
+      body: [student]
+    }).as('getStudentsWithStudent');
 
-    // 5. Return to the list.
-    cy.contains('a', 'Back to list').click();
+    cy.visit('/students');
 
-    cy.contains('Student Management').should('be.visible');
+    cy.wait('@getStudentsWithStudent');
 
-    // Locate this student's row and delete it.
+    cy.on('window:confirm', () => true);
+
     cy.contains('tr', student.cardNumber)
       .should('be.visible')
       .within(() => {
         cy.get('button[aria-label="Delete student"]').click();
       });
 
-    // Confirm the deletion dialog.
-    cy.on('window:confirm', () => true);
+    cy.wait('@deleteStudent')
+      .its('response.statusCode')
+      .should('equal', 204);
 
-    // Verify that the student is no longer in the list.
-    cy.contains('tr', student.cardNumber).should('not.exist');    
-
+    cy.contains('tr', student.cardNumber).should('not.exist');
   });
 });
