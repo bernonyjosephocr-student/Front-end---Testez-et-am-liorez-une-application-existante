@@ -1,5 +1,5 @@
 import { defineConfig } from 'cypress'
-
+const registerCodeCoverageTasks = require('@cypress/code-coverage/task');
 export default defineConfig({
   
   e2e: {
@@ -9,10 +9,12 @@ export default defineConfig({
       "cypress/e2e/registration.cy.ts",
       "cypress/e2e/login.cy.ts",
       "cypress/e2e/student-management.cy.ts",
+      "cypress/e2e/coverage-check.cy.ts",
+      "cypress/e2e/auth-guard.cy.ts",
     ],
     setupNodeEvents(on, config) {
       // Intégration du plugin de couverture de code
-      require('@cypress/code-coverage/task')(on, config);
+      registerCodeCoverageTasks(on, config);
       return config;
     },
   },
